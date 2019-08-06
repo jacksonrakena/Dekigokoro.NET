@@ -12,12 +12,13 @@ namespace Dekigokoro.NET.Tests
 
         public async Task MainAsync()
         {
-            Console.WriteLine(Environment.GetEnvironmentVariable("DekigoKey"));
             var client = new DekigoClient(Environment.GetEnvironmentVariable("DekigoKey"));
+            var leaderboard = await client.GetPlayerCurrencyLeaderboardAsync();
 
-            await client.SetPlayerCurrencyAsync(1, 100);
-
-            Console.WriteLine("Player 1 has " + (await client.GetPlayerCurrencyAsync(1)).Balance);
+            foreach (var player in leaderboard)
+            {
+                Console.WriteLine("Rank " + player.Rank + ": " + "Player " + player.PlayerId + " has " + player.Balance + " coins.");
+            }
         }
     }
 }
