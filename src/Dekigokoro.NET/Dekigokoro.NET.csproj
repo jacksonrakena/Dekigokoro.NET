@@ -1,7 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionPrefix Condition=" '$(BuildNumber)' != '' ">$(VersionPrefix)-$(BuildNumber)</VersionPrefix>
+    <AssemblyName>Dekigokoro.NET</AssemblyName>
+    <Authors>abyssal512</Authors>
+    <Description>Build your game or app faster with this .NET client for Dekigokoro.</Description>
+    <PackageTags>dekigokoro;api-client;api;dotnet-api</PackageTags>
+    <PackageLicenseUrl>https://github.com/abyssal512/Dekigokoro.NET/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/abyssal512/Dekigokoro.NET</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/abyssal512/Dekigokoro.NET</RepositoryUrl>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
 </Project>
