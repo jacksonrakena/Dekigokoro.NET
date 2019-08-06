@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -72,6 +74,8 @@ namespace Dekigokoro.NET
             return JsonConvert.DeserializeObject<T>(value);
         }
 
+        #region Currency
+
         /// <summary>
         ///     Fetches the current currency balance for a player.
         /// </summary>
@@ -125,5 +129,26 @@ namespace Dekigokoro.NET
 
             return RequestModelAsync<PlayerCurrency>("/currency/" + playerId, new HttpMethod("PATCH"), data);
         }
+
+        /// <summary>
+        ///     Fetches the leaderboard of player currency, optionally using a subkey.
+        /// </summary>
+        /// <param name="offset">The position to get results after. Must be positive.</param>
+        /// <param name="limit">The aximum number of values to return. Must be between 1 and 100.</param>
+        /// <param name="subKey">The subkey to use. Optional.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous fetch operation.</returns>
+        public Task<IEnumerable<PlayerCurrencyRanked>> GetPlayerCurrencyLeaderboardAsync(int offset = 0, int limit = 100, string subKey = null)
+        {
+            if (limit < 1) throw new ArgumentException("Limit cannot be below 1.", nameof(limit));
+            if (limit > 100) throw new ArgumentException("Limit cannot be over 100.", nameof(limit));
+            if (offset < 0) throw new ArgumentException("Offset cannot be below 0.", nameof(offset));
+
+            if (subKey != null)
+                return RequestModelAsync<IEnumerable<PlayerCurrencyRanked>>("/currency/rankings/" + subKey, HttpMethod.Get);
+
+            return RequestModelAsync<IEnumerable<PlayerCurrencyRanked>>("/currency/rankings", HttpMethod.Get);
+        }
+
+        #endregion
     }
 }
