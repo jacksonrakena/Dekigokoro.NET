@@ -15,5 +15,11 @@ namespace Dekigokoro.NET
         /// </summary>
         [JsonProperty("subkey")]
         public string Subkey { get; set; }
+
+        /// <summary>
+        ///     The ID of the Dekigokoro application that sent this request.
+        /// </summary>
+        [JsonProperty("app_id", ItemConverterType = typeof(StringLongConverter))]
+        public string ApplicationId { get; set; }
     }
 }
