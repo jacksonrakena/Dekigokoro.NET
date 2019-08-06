@@ -32,13 +32,16 @@ namespace Dekigokoro.NET
             if (string.IsNullOrWhiteSpace(_token)) throw new ArgumentException("Token must not be null, or whitespace.", nameof(token));
 
             HttpClient = new HttpClient();
-            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("", _token);
+            HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", _token);
         }
 
         private async Task<string> InternalRequestAsync(Uri requestUri, HttpMethod method, HttpContent content = null)
         {
             if (content != null && content.Headers.ContentType.MediaType != "application/json" && method != HttpMethod.Get)
-                throw new InvalidOperationException($"Cannot send a non-GET request with a Content-Type that is not application/json.");
+            {
+                content.Headers.Clear();
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            }
 
             var message = new HttpRequestMessage
             {
@@ -49,9 +52,13 @@ namespace Dekigokoro.NET
 
             var response = await HttpClient.SendAsync(message);
 
-            response.EnsureSuccessStatusCode(); // I should probably do something about this, but this is good for now
-
             var contentString = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine(contentString);
+            }
+            response.EnsureSuccessStatusCode(); // I should probably do something about this, but this is good for now
 
             response.Dispose();
             message.Dispose();
@@ -61,7 +68,7 @@ namespace Dekigokoro.NET
 
         private async Task<T> RequestModelAsync<T>(string requestUri, HttpMethod method, object content = null)
         {
-            var value = await InternalRequestAsync(new Uri(ApiBaseUrl + requestUri), method, new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json");
+            var value = await InternalRequestAsync(new Uri(ApiBaseUrl + requestUri), method, new StringContent(JsonConvert.SerializeObject(content)));
             return JsonConvert.DeserializeObject<T>(value);
         }
 

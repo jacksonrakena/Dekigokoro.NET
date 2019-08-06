@@ -1,0 +1,46 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  Major: '1'
+  Minor: '0'
+  Patch: '0'
+
+steps:
+- task: DotNetCoreInstaller@0
+  displayName: 'Install .NET Core 2.1.300'
+  inputs:
+    version: '2.1.300'
+
+- task: NuGetToolInstaller@0
+  displayName: 'Install NuGet'
+
+- task: NuGetCommand@2
+  displayName: 'Restore packages'
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: VSBuild@1
+  displayName: 'Build project'
+  inputs:
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- script: |
+    dotnet pack "src\Dekigokoro.NET\Dekigokoro.NET.csproj" -o "../../artifacts/" -c $(buildConfiguration) /p:BuildNumber=$(Build.BuildNumber)
+  displayName: 'Pack projects'
+
+- task: NuGetCommand@2
+  displayName: 'Push project to NuGet'
+  inputs:
+    command: 'push'
+    packagesToPush: 'artifacts/*.nupkg'
+    nuGetFeedType: 'external'
+    publishFeedCredentials: 'NuGet abyssal512'
