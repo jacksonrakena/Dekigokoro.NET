@@ -1,14 +1,3 @@
-# Dekigokoro.NET
-Build your game or app faster with this .NET client for Dekigokoro.  
-
-### Dekigokoro
-Dekigokoro handles the boring parts for you, so that you can focus on writing the code that matters.
-
-[Dekigokoro homepage](https://dekigokoro.io/)
-
-### Dekigokoro.NET
-Add the library from NuGet (it's listed), create a new instance of `DekigoClient`, and use the methods listed there to your heart's content. No warranty.
-
-#### Copyright
-Dekigokoro.NET is Copyright (c) 2019 abyssal512  
-Dekigokoro has no known license. Service URL is [https://dekigokoro.io/](https://dekigokoro.io/).
+This project has been suspended and archived **May 5th, 2020** as the main Dekigokoro API service appears to be offline indefinitely.    
+  
+Repository is now Creative Commons Public Domain (CC0), effective immediately.
